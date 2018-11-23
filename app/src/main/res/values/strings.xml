@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Catch-Point</string>
+
+    <string name="fichier_shared_preferences">infosClient</string>
+</resources>
