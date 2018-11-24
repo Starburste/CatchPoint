@@ -30,6 +30,7 @@
 
     <EditText
         android:id="@+id/editMotDePasse"
+        android:password="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -58,12 +59,4 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="54dp"
         android:text="Connexion" />
-
-    <TextView
-        android:id="@+id/idUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editMotDePasse"
-        android:layout_alignTop="@+id/connexionButton"
-        android:visibility="invisible" />
 </RelativeLayout>

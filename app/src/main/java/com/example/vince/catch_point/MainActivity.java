@@ -5,17 +5,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,21 +25,21 @@ public class MainActivity extends AppCompatActivity {
     private Button connexionButton;
     private SharedPreferences sharedPreferences;
     private ConnexionAsynk connexion;
-    private TextView idUser;
     private TextView error;
+    private String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        idUser = (TextView) findViewById(R.id.idUser);
+        sharedPreferences = getSharedPreferences(getString(R.string.fichier_shared_preferences), this.MODE_PRIVATE);
+        connexion = new ConnexionAsynk();
+
         error = (TextView) findViewById(R.id.Error);
         textLogin = (EditText) findViewById(R.id.editLogin);
         textMDP = (EditText) findViewById(R.id.editMotDePasse);
         connexionButton = (Button) findViewById(R.id.connexionButton);
-        sharedPreferences = getSharedPreferences(getString(R.string.fichier_shared_preferences), this.MODE_PRIVATE);
-        connexion = new ConnexionAsynk();
 
         connexionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        verifieExistencePreferences();
+    }
+
+    private void verifieExistencePreferences() {
+        if (sharedPreferences.getString(STR_LOGIN,"").equals("") || sharedPreferences.getString(STR_MDP,"").equals("")){
+            return;
+        }else{
+            Toast.makeText(getApplicationContext(),"Connexion en cours. Veuillez patienter.",Toast.LENGTH_SHORT).show();
+            textLogin.setText(sharedPreferences.getString(STR_LOGIN,""));
+            textMDP.setText(sharedPreferences.getString(STR_MDP,""));
+            buttonTapped();
+        }
     }
 
     private void buttonTapped() {
@@ -59,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testSiLoginMdpCorrect() {
-        if (idUser.getText().equals("null")){
+         if (idUser.equals("null")){
             error.setText("Login ou mot de passe incorrect.");
             textMDP.setText("");
         }else{
@@ -110,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject monRetour = new JSONObject(o);
                 String maValue = monRetour.getString("user");
-                idUser.setText(maValue);
+                idUser = maValue;
             } catch (JSONException e) {
-                idUser.setText("null");
+                idUser = "null";
                 e.printStackTrace();
             }
             testSiLoginMdpCorrect();
